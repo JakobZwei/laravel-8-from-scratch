@@ -51,16 +51,36 @@
                     </div>
 
                 <section class="col-span-8 col-start-5 mt-10 space-y-6">
-                    <form method="POST" action="#" class="border border-gray-200 p-6 rounded-xl">
+                     @auth
+                    <x-panel>
+
+                    <form method="POST" action="/posts/{{$post->slug}}/comments">
                         @csrf
-                        <header class="flex">
-                        <img src="https://i.pravatar.cc/60?u={{ auth()->id() }}" alt="" width="40" height="40" class="rounded-xl">
-                            <h2>Hallo, willst du einen Kommentar schreiben?</h2>
+                        <header class="flex items-center">
+                        <img src="https://i.pravatar.cc/60?u={{ auth()->id() }}" alt="" width="40" height="40" class="rounded-full">
+
+
+                            <h2 class="ml-4">Hallo, willst du einen Kommentar schreiben?</h2>
+
                         </header>
 
+                        <div class="mt-6">
+                            <textarea name="body" class="w-full text-sm focus:outline-none focus:ring" cols="30" rows="5" required placeholder="Quick, think of something!"></textarea>
+                        </div>
+
+                        @error('body')
+                            <span class="text-xs text-red-500">{{$message}}</span>
+                        @enderror
+                        <div class="flex justify-end mt-6 pt-6 border-t border-gray-200">
+                            <button type="submit" class="bg-blue-500 text-white uppercase font-semibold text-xs py-2 px-10 rounded-2xl hover:bg-blue-600">Post</button>
+                        </div>
                     </form>
-
-
+                    </x-panel>
+                    @else
+                        <p class="font-semibold color-blue-200">
+                            <a class="color-blue-200 hover:underline" href="/login">Log dich ein um einen Kommentar zu verfassen!</a>
+                        </p>
+                    @endauth
                     @foreach ($post->comments as $comment)
                         <x-post-comment :comment="$comment" />
                     @endforeach
